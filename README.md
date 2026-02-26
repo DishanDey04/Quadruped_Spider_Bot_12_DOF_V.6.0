@@ -112,11 +112,9 @@ The math is split into two 2‑D problems (see diagrams below):
 
 <blockquote>See the sequences below for step‑by‑step derivations.</blockquote>
 
-![IK geometry 1](Diagrams/IK1.png)
-![IK geometry 2](Diagrams/IK2.png)
-![IK geometry 3](Diagrams/IK3.png)
-![IK geometry 4](Diagrams/IK4.png)
-![IK geometry 5](Diagrams/IK5.png)
+| ![IK1](Diagrams/IK1.png) | ![IK2](Diagrams/IK2.png) | ![IK3](Diagrams/IK3.png) |
+|--------------------------|--------------------------|--------------------------|
+|                          | ![IK4](Diagrams/IK4.png) | ![IK5](Diagrams/IK5.png) |
 
 The computed angles are converted to degrees and clamped to `[-1,1]` where
 acos/asin arguments appear to avoid numeric errors.
