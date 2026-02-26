@@ -37,6 +37,21 @@ A standard Arduino UNO powers the system; a sensor shield or servo shield makes 
 - `femur.stl`, `tibia-b.stl`, `tibia-f.stl` – femur and tibia segments
 - `hinge.stl` – generic hinge part
 
+### 🧩 Parts List
+
+| Part      | Quantity |
+|-----------|----------|
+| tibia‑f   | 2        |
+| tibia‑b   | 2        |
+| coxa‑f    | 2        |
+| coxa‑b    | 2        |
+| femur     | 4        |
+| hinge     | 8        |
+| body‑u    | 1        |
+| body‑m    | 1        |
+| body‑d    | 1        |
+
+
 As shown below, the geometry definitions in `Q_BEE_V5_defs.h` (length_a, length_b, length_c) correspond to the link lengths of the printed legs.
 
 ![Range of movement of the spider](Diagrams/Range of movement of the spider.png)
@@ -95,15 +110,13 @@ The math is split into two 2‑D problems (see diagrams below):
 2. Side view (v‑z plane, where `v = w - length_c`) uses the law of cosines to
    compute α and β based on link lengths `length_a`, `length_b`.
 
-<blockquote>See `Diagrams/IK1.png` through `IK5.png` for step‑by‑step derivations.</blockquote>
+<blockquote>See the sequences below for step‑by‑step derivations.</blockquote>
 
-```markdown
 ![IK geometry 1](Diagrams/IK1.png)
 ![IK geometry 2](Diagrams/IK2.png)
 ![IK geometry 3](Diagrams/IK3.png)
 ![IK geometry 4](Diagrams/IK4.png)
 ![IK geometry 5](Diagrams/IK5.png)
-```
 
 The computed angles are converted to degrees and clamped to `[-1,1]` where
 acos/asin arguments appear to avoid numeric errors.
