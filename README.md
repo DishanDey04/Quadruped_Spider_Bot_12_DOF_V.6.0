@@ -2,7 +2,10 @@
 
 This repository contains the source code, geometry, and documentation for the **Q_BEE_V5** Arduino‑based quadruped robot.  The project is heavily inspired by the Instructables project *"DIY Arduino Quadruped Robot With Inverse Kinematic"* by ilhamdefra and implements inverse‑kinematics, smooth leg interpolation, and a simple demo gait using 12 SG90 servos.
 
-![Quadruped walk](Diagrams/Quadruped walk.png)
+<table><tr>
+<td><img src="Diagrams/Quadruped walk.png" alt="Quadruped walk" width="300"/></td>
+<td><img src="Diagrams/Simulator models.png" alt="Simulator models" width="300"/></td>
+</tr></table>
 
 ---
 
