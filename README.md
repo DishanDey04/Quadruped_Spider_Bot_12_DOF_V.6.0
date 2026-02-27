@@ -59,7 +59,18 @@ As shown below, the geometry definitions in `Q_BEE_V5_defs.h` (length_a, length_
 
 ![Range of movement of the spider](Diagrams/Range of movement of the spider.png)
 
-## 📐 Kinematics and Diagrams
+## � Circuit Diagrams & Connections
+
+For ease of assembly, the following diagrams show the Arduino/sensor shield wiring and the overall electrical layout:
+
+<table><tr>
+<td><img src="Diagrams/botconnections.png" alt="Bot connections" width="300"/></td>
+<td><img src="Diagrams/circuitdiagram.png" alt="Circuit diagram" width="300"/></td>
+</tr></table>
+
+Use these as a reference when wiring the servos and power supply to the UNO and any sensor/communication modules.
+
+## �📐 Kinematics and Diagrams
 
 The `Diagrams/` folder contains reference illustrations used during development:
 
@@ -69,6 +80,15 @@ The `Diagrams/` folder contains reference illustrations used during development:
 - `Simulator models.png` – model visuals used for simulation
 
 These images may be referenced directly from the README as shown above.
+
+## 🧱 3D Model
+
+A full 3D model of the assembled quadruped is available in the repository.  GitHub supports inline viewing of `.glb` files; click the preview below or open the file directly to interact with the model.
+
+<model-viewer src="3D Parts/Quadruped.glb" alt="3D Quadruped model" camera-controls auto-rotate style="width:100%;height:400px;"></model-viewer>
+
+(If your viewer does not appear, you can still download `3D Parts/Quadruped.glb` and open it in any compatible GLTF/glb viewer.)
+
 
 ## 🔧 Build & Upload Instructions
 
