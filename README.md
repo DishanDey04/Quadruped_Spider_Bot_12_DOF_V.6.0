@@ -64,8 +64,8 @@ As shown below, the geometry definitions in `Q_BEE_V5_defs.h` (length_a, length_
 For ease of assembly, the following diagrams show the Arduino/sensor shield wiring and the overall electrical layout:
 
 <table><tr>
-<td><img src="Diagrams/botconnections.png" alt="Bot connections" width="300"/></td>
-<td><img src="Diagrams/circuitdiagram.png" alt="Circuit diagram" width="300"/></td>
+<td><img src="Diagrams/bot_connection.png" alt="Bot connections" width="300"/></td>
+<td><img src="Diagrams/circuit_diagram.png" alt="Circuit diagram" width="300"/></td>
 </tr></table>
 
 Use these as a reference when wiring the servos and power supply to the UNO and any sensor/communication modules.
@@ -85,7 +85,8 @@ These images may be referenced directly from the README as shown above.
 
 A full 3D model of the assembled quadruped is available in the repository.  GitHub supports inline viewing of `.glb` files; click the preview below or open the file directly to interact with the model.
 
-<model-viewer src="3D Parts/Quadruped.glb" alt="3D Quadruped model" camera-controls auto-rotate style="width:100%;height:400px;"></model-viewer>
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+<model-viewer src="3D%20Parts/Quadruped.glb" alt="3D Quadruped model" camera-controls auto-rotate style="width:100%;height:400px;"></model-viewer>
 
 (If your viewer does not appear, you can still download `3D Parts/Quadruped.glb` and open it in any compatible GLTF/glb viewer.)
 
@@ -116,34 +117,42 @@ The demo loop in `Q_BEE_V5.ino` showcases each capability sequentially; you can 
 
 ### Inverse Kinematics (`Q_BEE_V5_kinematics.h`)
 
-The `cartesian_to_polar` routine solves the classic 3‑joint leg inverse kinematics.  Given a desired foot tip position `(x,y,z)` relative to the coxa joint, it computes three angles:
-
-- **α**: elevation of the femur joint
-- **β**: bend of the tibia joint
-- **γ**: rotation of the coxa joint in the horizontal plane
+The core solver lives in `cartesian_to_polar`, which translates a desired
+foottip coordinate `(x,y,z)` (relative to the coxa pivot) into the three
+joint angles required by the leg.
 
 ```cpp
 static inline void cartesian_to_polar(float &alpha, float &beta, float &gamma,
                                      float x, float y, float z)
 ```
 
-The math is split into two 2‑D problems (see diagrams below):
+**Step-by-step summary of the algorithm:**
 
-1. Top view (x‑z plane) defines `γ` and the effective leg span `w = ±√(x²+y²)`.
-2. Side view (v‑z plane, where `v = w - length_c`) uses the law of cosines to
-   compute α and β based on link lengths `length_a`, `length_b`.
+1. Compute the azimuth `γ` in the horizontal plane with `atan2(y, x)`.
+2. Determine the planar reach `w = hypot(x, y)` and subtract the coxa length
+   `length_c` to obtain `v`, the projection along the femur‑tibia plane.
+3. Combine `v` and the vertical offset `z` into a single distance
+   `h = hypot(v, z)`.
+4. Use the law of cosines on the triangle formed by `length_a` (femur),
+   `length_b` (tibia) and `h` to compute the elevation `α` and bend `β`:
 
-<blockquote>See the sequences below for step‑by‑step derivations.</blockquote>
+```cpp
+gamma = atan2(y, x);
+float w = hypot(x, y);
+float v = w - length_c;
+float h = hypot(v, z);
+alpha = atan2(z, v) + acos((length_a*length_a + h*h - length_b*length_b) /
+                           (2*length_a*h));
+beta  = acos((length_a*length_a + length_b*length_b - h*h) /
+             (2*length_a*length_b)) - PI;
+```
 
-| ![IK1](Diagrams/IK1.png) | ![IK2](Diagrams/IK2.png) | ![IK3](Diagrams/IK3.png) |
-|--------------------------|--------------------------|--------------------------|
-| ![Coordinate frames of the robot](Diagrams/Coordinate%20frames%20of%20the%20robot.png)| ![IK4](Diagrams/IK4.png) | ![IK5](Diagrams/IK5.png) |
-
-The computed angles are converted to degrees and clamped to `[-1,1]` where
-acos/asin arguments appear to avoid numeric errors.
-
-The companion function `polar_to_servo_angles` applies leg‑specific
-transformations and bounds the results to `[0,180]` for use with hobby servos.
+Angles are clamped and converted to degrees to avoid domain errors when
+passing through `acos`/`asin`.  The helper `polar_to_servo_angles` then
+applies leg-specific rotations/inversions and limits the final values to the
+`[0,180]` range required by hobby servos.  See the header comments in
+`Q_BEE_V5_kinematics.h` for constants (`length_a`, `length_b`, `length_c`)
+that correspond to the printed part geometry.
 
 ### Motion primitives (`Q_BEE_V5_motion.*`)
 
