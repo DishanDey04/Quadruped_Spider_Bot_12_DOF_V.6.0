@@ -70,25 +70,51 @@ For ease of assembly, the following diagrams show the Arduino/sensor shield wiri
 
 Use these as a reference when wiring the servos and power supply to the UNO and any sensor/communication modules.
 
-## �📐 Kinematics and Diagrams
 
-The `Diagrams/` folder contains reference illustrations used during development:
+## 📐 Kinematics Section
 
-- `IK1.png` … `IK5.png` – inverse‑kinematics derivation and coordinate frames
-- `Coordinate frames of the robot.png` – body/leg coordinate axes
-- `Quadruped walk.png` – gait sequence overview
-- `Simulator models.png` – model visuals used for simulation
+This section explains the code for the inverse kinematics used in the quadruped robot. The main function is `cartesian_to_polar`, which converts a desired foot position `(x, y, z)` into the three joint angles `(alpha, beta, gamma)` for each leg:
 
-These images may be referenced directly from the README as shown above.
+```cpp
+static inline void cartesian_to_polar(float &alpha, float &beta, float &gamma, float x, float y, float z) {
+  float v, w;
+  w = (x >= 0 ? 1.0f : -1.0f) * (sqrt(x * x + y * y));
+  v = w - length_c;
+  float denom = 2.0f * length_a * sqrt(v * v + z * z);
+  float aarg;
+  if (denom < EPSILON) aarg = 1.0f; else aarg = (length_a * length_a - length_b * length_b + v * v + z * z) / denom;
+  aarg = clampf(aarg, -1.0f, 1.0f);
+  alpha = atan2(z, v) + acos(aarg);
+  float barg = (length_a * length_a + length_b * length_b - v * v - z * z) / (2.0f * length_a * length_b);
+  barg = clampf(barg, -1.0f, 1.0f);
+  beta = acos(barg);
+  gamma = (w >= 0) ? atan2(y, x) : atan2(-y, -x);
+  // convert to degrees
+  alpha = alpha / pi * 180.0f;
+  beta = beta / pi * 180.0f;
+  gamma = gamma / pi * 180.0f;
+}
+```
+
+**Explanation:**
+
+- `w` is the horizontal distance from the robot's center to the foot, signed by the x direction.
+- `v` is the effective reach after subtracting the coxa length (`length_c`).
+- The femur angle `alpha` is calculated using `atan2` and the law of cosines, with clamping to avoid domain errors.
+- The tibia angle `beta` is also calculated using the law of cosines and clamped.
+- The coxa rotation `gamma` is the azimuth angle in the horizontal plane.
+- All angles are converted to degrees for servo compatibility.
+
+This function allows the robot to move its legs to any reachable position in 3D space by solving the inverse kinematics for each leg.
 
 ## 🧱 3D Model
 
 A full 3D model of the assembled quadruped is available in the repository.  GitHub supports inline viewing of `.glb` files; click the preview below or open the file directly to interact with the model.
 
-<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js"></script>
 <model-viewer src="3D%20Parts/Quadruped.glb" alt="3D Quadruped model" camera-controls auto-rotate style="width:100%;height:400px;"></model-viewer>
 
-(If your viewer does not appear, you can still download `3D Parts/Quadruped.glb` and open it in any compatible GLTF/glb viewer.)
+> **Note:** If your environment blocks CDN access or the viewer still doesn’t render, you can simply download `3D Parts/Quadruped.glb` and open it with any GLTF/glb viewer (e.g. [https://gltf-viewer.donmccurdy.com/](https://gltf-viewer.donmccurdy.com/)).
 
 
 ## 🔧 Build & Upload Instructions
