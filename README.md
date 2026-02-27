@@ -1,23 +1,30 @@
-# Q_BEE_V5 Quadruped Robot
+# 🤖 Q_BEE_V5 Quadruped Robot
 
-This repository contains the source code, geometry, and documentation for the **Q_BEE_V5** Arduino‑based quadruped robot.  The project is heavily inspired by the Instructables project *"DIY Arduino Quadruped Robot With Inverse Kinematic"* by ilhamdefra and implements inverse‑kinematics, smooth leg interpolation, and a simple demo gait using 12 SG90 servos.
+<p align="center">
+  <b>A feature-rich, Arduino-powered quadruped robot with inverse kinematics, smooth gaits, and modular code.</b><br>
+  <i>Inspired by <a href="https://www.instructables.com/DIY-Arduino-Quadruped-Robot-With-Inverse-Kinematic/">DIY Arduino Quadruped Robot With Inverse Kinematic</a> by ilhamdefra.</i>
+</p>
 
-<table><tr>
-<td><img src="Diagrams/Quadruped walk.png" alt="Quadruped walk" width="300"/></td>
-<td><img src="Diagrams/Simulator models.png" alt="Simulator models" width="300"/></td>
-</tr></table>
+<div align="center">
+  <img src="Diagrams/Quadruped walk.png" alt="Quadruped walk" width="320"/>
+  <img src="Diagrams/Simulator models.png" alt="Simulator models" width="320"/>
+</div>
 
 ---
 
-## 📁 Repository Structure
+## 📁 Project Structure
 
-- `Q_BEE_V5.ino` – main Arduino sketch and entry point
-- `Q_BEE_V5_defs.h` – robot geometry, constants and helpers
-- `Q_BEE_V5_kinematics.h` – inverse kinematic math (cartesian↔polar)
-- `Q_BEE_V5_motion.*` – high‑level motion primitives and utilities
-- `Q_BEE_V5_moves.*` – gait sequences, gestures, and body motions
-- `Q_BEE_V5_servo.*` – servo abstraction and interpolation service
-- `Q_BEE_V5_state.h` – global state shared across modules
+| File/Folder           | Purpose                                      |
+|----------------------|----------------------------------------------|
+| `Q_BEE_V5.ino`       | Main Arduino sketch and entry point           |
+| `Q_BEE_V5_defs.h`    | Robot geometry, constants, helpers            |
+| `Q_BEE_V5_kinematics.h` | Inverse kinematic math (cartesian↔polar)   |
+| `Q_BEE_V5_motion.*`  | High-level motion primitives/utilities        |
+| `Q_BEE_V5_moves.*`   | Gait sequences, gestures, body motions        |
+| `Q_BEE_V5_servo.*`   | Servo abstraction and interpolation service   |
+| `Q_BEE_V5_state.h`   | Global state shared across modules            |
+| `3D Parts/`          | STL/GLB files for 3D-printed parts           |
+| `Diagrams/`          | Circuit, kinematics, and assembly diagrams    |
 
 
 ## 🛠 Hardware and 3D Printed Parts
@@ -106,16 +113,6 @@ static inline void cartesian_to_polar(float &alpha, float &beta, float &gamma, f
 - All angles are converted to degrees for servo compatibility.
 
 This function allows the robot to move its legs to any reachable position in 3D space by solving the inverse kinematics for each leg.
-
-## 🧱 3D Model
-
-A full 3D model of the assembled quadruped is available in the repository.  GitHub supports inline viewing of `.glb` files; click the preview below or open the file directly to interact with the model.
-
-<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js"></script>
-<model-viewer src="3D%20Parts/Quadruped.glb" alt="3D Quadruped model" camera-controls auto-rotate style="width:100%;height:400px;"></model-viewer>
-
-> **Note:** If your environment blocks CDN access or the viewer still doesn’t render, you can simply download `3D Parts/Quadruped.glb` and open it with any GLTF/glb viewer (e.g. [https://gltf-viewer.donmccurdy.com/](https://gltf-viewer.donmccurdy.com/)).
-
 
 ## 🔧 Build & Upload Instructions
 
@@ -235,15 +232,5 @@ that gestures return to the previous stance.
 ## 📚 References
 
 - Original Instructables article: [DIY Arduino Quadruped Robot With Inverse Kinematic](https://www.instructables.com/DIY-Arduino-Quadruped-Robot-With-Inverse-Kinematic/)
-- YouTube channel of the author: http://www.youtube.com/user/ilhamdefra
-- GrabCAD quadruped design (recommended chassis): https://grabcad.com/library/quadruped-robot-for-mini-servo-sg90-or-similar-size-1
 
-> This repository is a derivative of the above tutorial and includes enhancements such as servo interpolation and modular code structure.
-
-## 📝 License
-
-The project code is provided under the MIT License; diagrams and text follow their original Creative Commons attribution‑noncommercial‑sharealike license as noted on Instructables.
-
----
-
-Feel free to experiment, modify the gait parameters, or adapt the kinematics for different leg geometries. Happy hacking! 🐾
+Feel free to experiment, modify the gait parameters, or adapt the kinematics for different leg geometries. Happy coding! 🐾
