@@ -17,7 +17,7 @@
 Here is the rendered model of the Q_BEE_V6 quadruped robot:
 
 <p align="center">
-  <img src="Diagrams/final_model.png" alt="Final Model" width="400"/>
+  <img src="Diagrams/final_model.png" alt="Final Model" width="900"/>
 </p>
 
 ---
