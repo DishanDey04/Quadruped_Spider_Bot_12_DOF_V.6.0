@@ -1,9 +1,11 @@
-#include "Q_BEE_V5_defs.h"
-#include "Q_BEE_V5_state.h"
-#include "Q_BEE_V5_servo.h"
-#include "Q_BEE_V5_kinematics.h"
-#include "Q_BEE_V5_motion.h"
-#include "Q_BEE_V5_moves.h"
+// ...existing code...
+#include "Q_BEE_V6_defs.h"
+#include "Q_BEE_V6_bluetooth.h"
+#include "Q_BEE_V6_state.h"
+#include "Q_BEE_V6_servo.h"
+#include "Q_BEE_V6_kinematics.h"
+#include "Q_BEE_V6_motion.h"
+#include "Q_BEE_V6_moves.h"
 #include <FlexiTimer2.h>
 
 /* variables for movement ----------------------------------------------------*/
@@ -32,8 +34,10 @@ const unsigned int SERVO_TICK_MS = 10; // 10 ms -> 100 Hz interpolation (smooth 
 const int SERVO_MIN_US = 1000;         // microsecond mapping for 0 degrees (adjust if needed)
 const int SERVO_MAX_US = 2000;         // microsecond mapping for 180 degrees (adjust if needed)
 
-#include "Q_BEE_V5_moves.h"
+// ...existing code...
+#include "Q_BEE_V6_moves.h"
 
+// Initialize robot and Bluetooth
 void setup(){
   set_site(0, x_default - x_offset, y_start + y_step, z_boot);
   set_site(1, x_default - x_offset, y_start + y_step, z_boot);
@@ -49,61 +53,68 @@ void setup(){
     servo_now[leg][0] = aTemp; servo_now[leg][1] = bTemp; servo_now[leg][2] = cTemp;
     servo_target[leg][0] = servo_now[leg][0]; servo_target[leg][1] = servo_now[leg][1]; servo_target[leg][2] = servo_now[leg][2];
     servo_step[leg][0] = servo_step[leg][1] = servo_step[leg][2] = 0.0f;
-    // initialize new interpolation metadata
     servo_start[leg][0] = servo_now[leg][0]; servo_start[leg][1] = servo_now[leg][1]; servo_start[leg][2] = servo_now[leg][2];
     servo_ticks_total[leg] = 0; servo_tick_idx[leg] = 0;
     last_servo_pulse[leg][0] = last_servo_pulse[leg][1] = last_servo_pulse[leg][2] = -1;
     interrupts();
   }
-  FlexiTimer2::set(SERVO_TICK_MS, servo_service); // interpolation tick (configurable)
+  FlexiTimer2::set(SERVO_TICK_MS, servo_service);
   FlexiTimer2::start();
   servo_attach();
+  bluetooth_init(); // Initialize Bluetooth module
 }
 
-void loop()
-{
-  // Demo loop: exercise every movement primitive with short pauses so you can observe behavior
+// Main loop: process Bluetooth commands and execute robot movements
+void loop() {
+  static bool is_moving = false;
+  bluetooth_process();
 
-  // ensure robot is standing before demo
-  stand();
-  delay(500);
+  // If a movement is in progress, ignore Bluetooth commands
+  if (is_moving) {
+    // Check if all legs have reached their expected positions
+    bool all_reached = true;
+    for (int i = 0; i < 4; i++) {
+      for (int j = 0; j < 3; j++) {
+        if (fabsf(site_now[i][j] - site_expect[i][j]) > 0.1f) {
+          all_reached = false;
+          break;
+        }
+      }
+      if (!all_reached) break;
+    }
+    if (all_reached) is_moving = false;
+    return;
+  }
 
-  // locomotion
-  step_forward(1);
-  delay(300);
-  step_back(1);
-  delay(300);
+  // If a Bluetooth command is available and not moving, process it
+  if (bluetooth_command_available()) {
+    String cmd = bluetooth_get_command();
+    // Example: simple command parser (expand as needed)
+    if (cmd == "FORWARD") {
+      is_moving = true;
+      step_forward(1);
+    } else if (cmd == "BACK") {
+      is_moving = true;
+      step_back(1);
+    } else if (cmd == "LEFT") {
+      is_moving = true;
+      turn_left(1);
+    } else if (cmd == "RIGHT") {
+      is_moving = true;
+      turn_right(1);
+    } else if (cmd == "SIT") {
+      is_moving = true;
+      sit();
+    } else if (cmd == "STAND") {
+      is_moving = true;
+      stand();
+    } else if (cmd == "DANCE") {
+      is_moving = true;
+      body_dance(3);
+    }
+    bluetooth_clear_command();
+    return;
+  }
 
-  // turning
-  turn_left(1);
-  delay(300);
-  turn_right(1);
-  delay(300);
-
-  // body shifts
-  body_left(15);
-  delay(300);
-  body_right(15);
-  delay(300);
-
-  // hand / head gestures
-  hand_wave(3);
-  delay(300);
-  hand_shake(3);
-  delay(300);
-  head_up(15);
-  delay(300);
-  head_down(15);
-  delay(300);
-
-  // dance + sit/stand
-  body_dance(3);
-  delay(500);
-  sit();
-  delay(800);
-  stand();
-  delay(800);
-
-  // brief idle before repeating demo
-  delay(1000);
+  // Idle: can add more idle behavior here if needed
 }

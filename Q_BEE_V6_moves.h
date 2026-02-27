@@ -1,7 +1,8 @@
-#ifndef Q_BEE_V5_MOVES_H
-#define Q_BEE_V5_MOVES_H
+// ...existing code...
+#ifndef Q_BEE_V6_MOVES_H
+#define Q_BEE_V6_MOVES_H
 
-#include "Q_BEE_V5_state.h"
+#include "Q_BEE_V6_state.h"
 
 void sit(void);
 void stand(void);
@@ -17,4 +18,4 @@ void head_up(int i);
 void head_down(int i);
 void body_dance(int i);
 
-#endif // Q_BEE_V5_MOVES_H
+#endif // Q_BEE_V6_MOVES_H

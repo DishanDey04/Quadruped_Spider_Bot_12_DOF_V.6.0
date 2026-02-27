@@ -1,5 +1,6 @@
-#ifndef Q_BEE_V5_DEFS_H
-#define Q_BEE_V5_DEFS_H
+// ...existing code...
+#ifndef Q_BEE_V6_DEFS_H
+#define Q_BEE_V6_DEFS_H
 
 // Basic robot geometry and small utility helpers
 #include <math.h>
@@ -34,4 +35,4 @@ static const float turn_y1 = y_start + y_step / 2.0f;
 static const float turn_x0 = turn_x1 - temp_b * cos(temp_alpha);
 static const float turn_y0 = temp_b * sin(temp_alpha) - turn_y1 - length_side;
 
-#endif // Q_BEE_V5_DEFS_H
+#endif // Q_BEE_V6_DEFS_H

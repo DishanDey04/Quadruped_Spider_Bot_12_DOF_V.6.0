@@ -1,6 +1,7 @@
-#include "Q_BEE_V5_servo.h"
-#include "Q_BEE_V5_state.h"
-#include "Q_BEE_V5_defs.h"
+// ...existing code...
+#include "Q_BEE_V6_servo.h"
+#include "Q_BEE_V6_state.h"
+#include "Q_BEE_V6_defs.h"
 #include <Arduino.h>
 #include <math.h>
 

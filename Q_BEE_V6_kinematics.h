@@ -1,7 +1,8 @@
-#ifndef Q_BEE_V5_KINEMATICS_H
-#define Q_BEE_V5_KINEMATICS_H
+// ...existing code...
+#ifndef Q_BEE_V6_KINEMATICS_H
+#define Q_BEE_V6_KINEMATICS_H
 
-#include "Q_BEE_V5_defs.h"
+#include "Q_BEE_V6_defs.h"
 
 // Convert cartesian coords to leg polar angles (alpha, beta, gamma)
 static inline void cartesian_to_polar(float &alpha, float &beta, float &gamma, float x, float y, float z){
@@ -43,4 +44,4 @@ static inline void polar_to_servo_angles(int leg, float alpha, float beta, float
   c_out = clampf(c, 0.0f, 180.0f);
 }
 
-#endif // Q_BEE_V5_KINEMATICS_H
+#endif // Q_BEE_V6_KINEMATICS_H

@@ -1,4 +1,4 @@
-# 🤖 Q_BEE_V5 Quadruped Robot
+# 🤖 Q_BEE_V6 Quadruped Robot
 
 <p align="center">
   <b>A feature-rich, Arduino-powered quadruped robot with inverse kinematics, smooth gaits, and modular code.</b><br>
@@ -16,13 +16,13 @@
 
 | File/Folder           | Purpose                                      |
 |----------------------|----------------------------------------------|
-| `Q_BEE_V5.ino`       | Main Arduino sketch and entry point           |
-| `Q_BEE_V5_defs.h`    | Robot geometry, constants, helpers            |
-| `Q_BEE_V5_kinematics.h` | Inverse kinematic math (cartesian↔polar)   |
-| `Q_BEE_V5_motion.*`  | High-level motion primitives/utilities        |
-| `Q_BEE_V5_moves.*`   | Gait sequences, gestures, body motions        |
-| `Q_BEE_V5_servo.*`   | Servo abstraction and interpolation service   |
-| `Q_BEE_V5_state.h`   | Global state shared across modules            |
+| `Q_BEE_V6.ino`       | Main Arduino sketch and entry point           |
+| `Q_BEE_V6_defs.h`    | Robot geometry, constants, helpers            |
+| `Q_BEE_V6_kinematics.h` | Inverse kinematic math (cartesian↔polar)   |
+| `Q_BEE_V6_motion.*`  | High-level motion primitives/utilities        |
+| `Q_BEE_V6_moves.*`   | Gait sequences, gestures, body motions        |
+| `Q_BEE_V6_servo.*`   | Servo abstraction and interpolation service   |
+| `Q_BEE_V6_state.h`   | Global state shared across modules            |
 | `3D Parts/`          | STL/GLB files for 3D-printed parts           |
 | `Diagrams/`          | Circuit, kinematics, and assembly diagrams    |
 
@@ -118,7 +118,7 @@ This function allows the robot to move its legs to any reachable position in 3D 
 
 1. **Hardware assembly** – Follow the Instructables guide or adapt your own chassis.  Ensure all servos are mounted and wired according to the pin mapping above.
 2. **Install Arduino IDE** – download from [arduino.cc/software](https://www.arduino.cc/en/software/).
-3. **Open the project** – load `Q_BEE_V5.ino` into the IDE.
+3. **Open the project** – load `Q_BEE_V6.ino` into the IDE.
 4. **Configure SERVO ranges** – adjust `SERVO_MIN_US`/`MAX_US` in the sketch if your servos differ.
 5. **Upload** – connect the UNO via USB and upload the sketch.
 6. **Power** – use a capable 5 V supply (phone charger, battery pack) to drive the servos when not connected to USB.
@@ -134,7 +134,6 @@ This function allows the robot to move its legs to any reachable position in 3D 
 
 The demo loop in `Q_BEE_V5.ino` showcases each capability sequentially; you can replace it with sensor input or remote commands to build autonomous behavior.
 
----
 
 ## 📘 Function Reference
 
@@ -227,7 +226,6 @@ Examples include:
 The functions use local temporaries to save and restore original positions so
 that gestures return to the previous stance.
 
----
 
 ## 📚 References
 

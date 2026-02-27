@@ -1,7 +1,8 @@
-#include "Q_BEE_V5_moves.h"
-#include "Q_BEE_V5_state.h"
-#include "Q_BEE_V5_defs.h"
-#include "Q_BEE_V5_motion.h"
+// ...existing code...
+#include "Q_BEE_V6_moves.h"
+#include "Q_BEE_V6_state.h"
+#include "Q_BEE_V6_defs.h"
+#include "Q_BEE_V6_motion.h"
 #include <Arduino.h>
 
 void sit(void){

@@ -1,7 +1,8 @@
-#ifndef Q_BEE_V5_STATE_H
-#define Q_BEE_V5_STATE_H
+// ...existing code...
+#ifndef Q_BEE_V6_STATE_H
+#define Q_BEE_V6_STATE_H
 
-#include "Q_BEE_V5_defs.h"
+#include "Q_BEE_V6_defs.h"
 
 // Shared runtime state (defined in the main .ino file)
 extern volatile float site_now[4][3];
@@ -31,4 +32,4 @@ extern const float leg_move_speed;
 extern const float body_move_speed;
 extern const float stand_seat_speed;
 
-#endif // Q_BEE_V5_STATE_H
+#endif // Q_BEE_V6_STATE_H

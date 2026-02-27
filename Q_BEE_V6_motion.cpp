@@ -1,5 +1,6 @@
-#include "Q_BEE_V5_motion.h"
-#include "Q_BEE_V5_kinematics.h"
+// ...existing code...
+#include "Q_BEE_V6_motion.h"
+#include "Q_BEE_V6_kinematics.h"
 #include <Arduino.h>
 #include <math.h>
 
