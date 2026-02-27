@@ -12,6 +12,16 @@
 
 ---
 
+## 🖼️ Final Model
+
+Here is the rendered model of the Q_BEE_V6 quadruped robot:
+
+<p align="center">
+  <img src="Diagrams/final_model.png" alt="Final Model" width="400"/>
+</p>
+
+---
+
 ## 📁 Project Structure
 
 | File/Folder           | Purpose                                      |
@@ -133,98 +143,6 @@ This function allows the robot to move its legs to any reachable position in 3D 
 - **Servo service** (`Q_BEE_V5_servo.cpp`) runs on a `FlexiTimer2` interrupt every 10 ms, performing quintic interpolation for smooth motion and updating the hardware.
 
 The demo loop in `Q_BEE_V5.ino` showcases each capability sequentially; you can replace it with sensor input or remote commands to build autonomous behavior.
-
-
-## 📘 Function Reference
-
-### Inverse Kinematics (`Q_BEE_V5_kinematics.h`)
-
-The core solver lives in `cartesian_to_polar`, which translates a desired
-foottip coordinate `(x,y,z)` (relative to the coxa pivot) into the three
-joint angles required by the leg.
-
-```cpp
-static inline void cartesian_to_polar(float &alpha, float &beta, float &gamma,
-                                     float x, float y, float z)
-```
-
-**Step-by-step summary of the algorithm:**
-
-1. Compute the azimuth `γ` in the horizontal plane with `atan2(y, x)`.
-2. Determine the planar reach `w = hypot(x, y)` and subtract the coxa length
-   `length_c` to obtain `v`, the projection along the femur‑tibia plane.
-3. Combine `v` and the vertical offset `z` into a single distance
-   `h = hypot(v, z)`.
-4. Use the law of cosines on the triangle formed by `length_a` (femur),
-   `length_b` (tibia) and `h` to compute the elevation `α` and bend `β`:
-
-```cpp
-gamma = atan2(y, x);
-float w = hypot(x, y);
-float v = w - length_c;
-float h = hypot(v, z);
-alpha = atan2(z, v) + acos((length_a*length_a + h*h - length_b*length_b) /
-                           (2*length_a*h));
-beta  = acos((length_a*length_a + length_b*length_b - h*h) /
-             (2*length_a*length_b)) - PI;
-```
-
-Angles are clamped and converted to degrees to avoid domain errors when
-passing through `acos`/`asin`.  The helper `polar_to_servo_angles` then
-applies leg-specific rotations/inversions and limits the final values to the
-`[0,180]` range required by hobby servos.  See the header comments in
-`Q_BEE_V5_kinematics.h` for constants (`length_a`, `length_b`, `length_c`)
-that correspond to the printed part geometry.
-
-### Motion primitives (`Q_BEE_V5_motion.*`)
-
-- `set_site(int leg, float x, float y, float z)`
-  - Plans a motion for a single leg.  Accepts `KEEP` (255) for any axis to leave
-    that coordinate unchanged.
-  - Computes the linear cartesian velocity `temp_speed` and the number of
-    interpolation ticks based on `move_speed` and `speed_multiple`.
-  - Converts the final cartesian target into servo angles and stores both
-    interpolation metadata and per‑tick servo deltas (`servo_step`, etc.).
-
-- `wait_reach(int leg)` / `wait_all_reach()`
-  - Blocks until the requested leg(s) reach their expected cartesian positions
-    within a 0.1 unit tolerance.  These are used heavily by the gaits to force
-    synchronized phase changes.
-
-### Servo management (`Q_BEE_V5_servo.*`)
-
-- `servo_attach()` / `servo_detach()` – attach/detach all 12 `Servo` objects to
-  their pins.  A short delay is added between calls to reduce electrical noise.
-
-- `servo_service()` – called periodically by a `FlexiTimer2` interrupt.
-  - Advances the `site_now` cartesian position using `temp_speed`.
-  - Executes a **quintic (min‑jerk) interpolation** between `servo_start` and
-    `servo_target` over `servo_ticks_total` steps, writing pulses only when they
-    change (hysteresis) to minimize jitter.
-  - When interpolation completes the metadata is reset so subsequent calls
-    simply hold the target angle.
-
-### Gait & gesture functions (`Q_BEE_V5_moves.cpp`)
-
-Each function sets appropriate `move_speed` then issues a series of
-`set_site`/`wait_all_reach` calls to achieve the desired body/leg motion.
-Examples include:
-
-- `sit()` / `stand()` – move all legs to boot or default height
-- `step_forward(step)` / `step_back(step)` – forward/backward walking using a
-  two‑phase tripod gait with alternating leg pairs
-- `turn_left(step)` / `turn_right(step)` – spot turns using computed
-  `turn_x0/1`, `turn_y0/1` geometry from `Q_BEE_V5_defs.h`
-- `body_left(int i)` / `body_right(int i)` – translate body laterally
-- `hand_wave(int i)` / `hand_shake(int i)` – lift a front leg and oscillate
-  through a small arc
-- `head_up(int i)` / `head_down(int i)` – tilt the body by adjusting each
-  leg's `z` value
-- `body_dance(int i)` – a choreographed sequence combining sit, head motions,
-  and side‑to‑side sways with variable speed
-
-The functions use local temporaries to save and restore original positions so
-that gestures return to the previous stance.
 
 
 ## 📚 References
